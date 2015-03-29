@@ -1,9 +1,13 @@
 package net.alexanderlyons.gastrackerapp;
 
+import android.content.Intent;
+import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -24,6 +28,11 @@ public class MainActivity extends ActionBarActivity {
            new DataPoint(2, 27.32)
         });
         graph.addSeries(series);
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
+           new DataPoint(0, 22),
+           new DataPoint(2,22)
+        });
+        graph.addSeries(series1);
     }
 
 
@@ -47,5 +56,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sendMessage(View view) {
+        Log.v("Debug", "The button was pressed correctly!");
+        Intent intent = new Intent(this, AddTripActivity.class);
+        //startActivity(intent);
     }
 }

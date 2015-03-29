@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">GasTrackerApp</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="add_trip">Add Trip</string>
+    <string name="date_prompt">Select the Date:</string>
+    <string name="mileage_prompt">Set the Mileage:</string>
+    <string name="fuel_price_prompt">Set the Price per Gallon:</string>
+    <string name="gallons_prompt">Set the Gallons Purchased:</string>
+    <string name="accept_prompt">Accept</string>
+    <string name="cancel_prompt">Cancel</string>
 </resources>
