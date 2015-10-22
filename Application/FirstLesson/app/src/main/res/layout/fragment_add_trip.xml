@@ -6,12 +6,36 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <EditText
-        android:id="@+id/add_date_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:hint="@string/date_placeholder" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/add_date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Date and Time"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/add_date_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:onClick="showDatePickerDialog"/>
+
+        <Button
+            android:id="@+id/add_time_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:onClick="showTimePickerDialog"/>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/add_distance_text"

@@ -1,20 +1,20 @@
 package net.alexanderlyons.firstlesson;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.app.DatePickerDialog;
+import android.support.v4.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.content.Intent;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.EditText;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements TripFragment.OnFragmentInteractionListener, AddTripFragment.OnAddTripFinishListener {
+public class MainActivity extends AppCompatActivity implements TripFragment.OnFragmentInteractionListener, AddTripFragment.OnAddTripFinishListener,
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     TripFragment tripFragment;
     AddTripFragment addTripFragment;
@@ -64,12 +64,32 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         switchToAddTripFragment();
     }
 
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Log.d(this.getClass().toString(),String.format("Called on Time Set: [%2d:%2d]", hourOfDay, minute));
+        addTripFragment.onTimeSet(hourOfDay, minute);
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Log.d(this.getClass().toString(),String.format("Called on Date Set: %2d/%2d/%4d", month, day, year));
+        addTripFragment.onDateSet(year, month, day);
+    }
+
     public void confirmAddTrip(View view) {
         addTripFragment.onConfirmButtonPressed();
     }
 
     public void cancelAddTrip(View view) {
         addTripFragment.onCancelButtonPressed();
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
     void switchToTripFragment() {

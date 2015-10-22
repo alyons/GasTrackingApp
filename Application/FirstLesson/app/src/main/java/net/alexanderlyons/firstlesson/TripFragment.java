@@ -19,6 +19,10 @@ import net.alexanderlyons.firstlesson.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -29,15 +33,6 @@ import java.util.Date;
  * interface.
  */
 public class TripFragment extends Fragment implements AbsListView.OnItemClickListener {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private ArrayList<Trip> trips;
 
@@ -52,14 +47,14 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private TripArrayAdapter mAdapter;
+    private TripAdapterRealm mAdapter;
+
+    private Realm realm;
 
     // TODO: Rename and change types of parameters
-    public static TripFragment newInstance(String param1, String param2) {
+    public static TripFragment newInstance() {
         TripFragment fragment = new TripFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +64,7 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
      * fragment (e.g. upon screen orientation changes).
      */
     public TripFragment() {
+
     }
 
     @Override
@@ -76,14 +72,13 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        this.loadData();
-
-        // TODO: Change Adapter to display your content
-        mAdapter = new TripArrayAdapter(getActivity(), this.trips);
+        realm = Realm.getInstance(getActivity());
+        RealmQuery<Trip> query = realm.where(Trip.class);
+        RealmResults<Trip> results = query.findAll();
+        results.sort("date", RealmResults.SORT_ORDER_DESCENDING);
+        mAdapter = new TripAdapterRealm(getActivity(), 0, results, true);
     }
 
     @Override
@@ -132,21 +127,6 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             mListener.onFragmentInteraction(position);
         }
-    }
-
-
-    private void loadData() {
-        trips = new ArrayList<Trip>();
-
-        // This is test data for proving the system works
-        trips.add(new Trip(new Date(1426809122000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1427327522000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1427932322000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1428364322000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1429573922000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1430178722000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1431042722000L), 177, 2.70, 7.453));
-        trips.add(new Trip(new Date(1431820322000L), 177, 2.70, 7.453));
     }
 
     /**
