@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FirstLesson</string>
+    <string name="action_settings">Settings</string>
+    <string name="edit_message">Enter a message.</string>
+    <string name="button_send">Send</string>
+    <string name="title_activity_main">Main Activity</string>
+    <string name="title_activity_display_message">My Message</string>
+    <string name="distance_display">"Miles: %.2f"</string>
+    <string name="date_display">"Date: %tF"</string>
+    <string name="price_display">"Price: %.2f"</string>
+    <string name="amount_display">"Gallons: %.3f"</string>
+    <string name="date_placeholder">Date</string>
+    <string name="distance_placeholder">Distance (Mi.)</string>
+    <string name="amount_placeholder">Amount (Gal.)</string>
+    <string name="price_placeholder">Price ($)</string>
+</resources>
