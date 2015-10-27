@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.carSpinner = (Spinner)findViewById(R.id.main_car_spinner);
-        this.carSpinner.setOnItemSelectedListener(this);
+        //this.carSpinner = (Spinner)findViewById(R.id.main_car_spinner);
+        //this.carSpinner.setOnItemSelectedListener(this);
 
         realm = Realm.getDefaultInstance();
         RealmQuery<Car> query = realm.where(Car.class);
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         carArrayAdapter = new CarArrayAdapter(getApplicationContext(), cars);
 
         if (savedInstanceState == null) {
-            tripFragment = new TripFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripFragment).commit();
+            //tripFragment = new TripFragment();
+            //getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripFragment).commit();
             //carFragment = new CarFragment();
             //getSupportFragmentManager().beginTransaction().add(R.id.content_container, carFragment).commit();
         }

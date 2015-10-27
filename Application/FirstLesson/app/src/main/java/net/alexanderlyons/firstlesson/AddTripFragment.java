@@ -79,7 +79,7 @@ public class AddTripFragment extends Fragment {
 
         dateFormat = DateFormat.getDateTimeInstance();
         //if (this.date != 0) usageDate = new Date(date);
-        realm = Realm.getInstance(getContext());
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
