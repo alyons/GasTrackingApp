@@ -13,4 +13,7 @@
     <string name="distance_placeholder">Distance (Mi.)</string>
     <string name="amount_placeholder">Amount (Gal.)</string>
     <string name="price_placeholder">Price ($)</string>
+    <string name="car_data_format">"%1$s %2$s %3$d"</string>
+    <string name="city_mpg_display_format">"City: %.1f mpg"</string>
+    <string name="highway_mpg_display_format">"Highway: %.1f mpg"</string>
 </resources>

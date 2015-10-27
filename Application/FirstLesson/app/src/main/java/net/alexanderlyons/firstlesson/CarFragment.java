@@ -1,9 +1,6 @@
 package net.alexanderlyons.firstlesson;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,17 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-
-import net.alexanderlyons.firstlesson.DataObjects.Trip;
-import net.alexanderlyons.firstlesson.DataObjects.TripAdapterRealm;
-import net.alexanderlyons.firstlesson.Helpers.MathHelper;
-
-import java.util.ArrayList;
+import net.alexanderlyons.firstlesson.DataObjects.Car;
+import net.alexanderlyons.firstlesson.DataObjects.CarListAdapter;
+import net.alexanderlyons.firstlesson.dummy.DummyContent;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -36,14 +25,12 @@ import io.realm.RealmResults;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnCarSelectedListener}
  * interface.
  */
-public class TripFragment extends Fragment implements AbsListView.OnItemClickListener, SwipeMenuListView.OnMenuItemClickListener {
+public class CarFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    private ArrayList<Trip> trips;
-
-    private OnFragmentInteractionListener mListener;
+    private OnCarSelectedListener mListener;
 
     /**
      * The fragment's ListView/GridView.
@@ -54,13 +41,13 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private TripAdapterRealm mAdapter;
+    private ListAdapter mAdapter;
 
     private Realm realm;
 
     // TODO: Rename and change types of parameters
-    public static TripFragment newInstance() {
-        TripFragment fragment = new TripFragment();
+    public static CarFragment newInstance(String param1, String param2) {
+        CarFragment fragment = new CarFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -70,8 +57,7 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TripFragment() {
-
+    public CarFragment() {
     }
 
     @Override
@@ -81,32 +67,16 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
         if (getArguments() != null) {
         }
 
-        // Initialize Realm Connection
         realm = Realm.getDefaultInstance();
-        RealmQuery<Trip> query = realm.where(Trip.class);
-        RealmResults<Trip> results = query.findAll();
-        results.sort("date", RealmResults.SORT_ORDER_DESCENDING);
-        mAdapter = new TripAdapterRealm(getActivity(), 0, results, true);
-
-        // SwipeMenuItemCreator
-        SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(new ColorDrawable(Color.RED));
-                deleteItem.setWidth(MathHelper.dipToPixels(getContext(), 90));
-                deleteItem.setTitle("Delete");
-                deleteItem.setTitleColor(Color.WHITE);
-                deleteItem.setTitleSize(18);
-                menu.addMenuItem(deleteItem);
-            }
-        };
+        RealmQuery<Car> query = realm.where(Car.class);
+        RealmResults<Car> results = query.findAll();
+        mAdapter = new CarListAdapter(getActivity(), 0, results, true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_trip, container, false);
+        View view = inflater.inflate(R.layout.fragment_car, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -122,20 +92,12 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity activity;
-
-        if (context instanceof Activity) {
-            activity = (Activity)context;
-
-            try {
-                mListener = (OnFragmentInteractionListener) activity;
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString()
-                        + " must implement OnFragmentInteractionListener");
-            }
-        } else {
-            throw new ClassCastException(context.toString() + " must be an Activity.");
-        }
+        /* try {
+            mListener = (OnCarSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnCarSelectedListener");
+        } */
     }
 
     @Override
@@ -147,18 +109,10 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
-            mListener.onFragmentInteraction(position);
+            // Notify the active callbacks interface (the activity, if the
+            // fragment is attached to one) that an item has been selected.
+            mListener.onCarSelected(DummyContent.ITEMS.get(position).id);
         }
-    }
-
-    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-        switch (index) {
-            case 0:
-                // Delete the item from the list
-                break;
-        }
-
-        return false;
     }
 
     /**
@@ -184,9 +138,9 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnCarSelectedListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int id);
+        public void onCarSelected(String id);
     }
 
 }

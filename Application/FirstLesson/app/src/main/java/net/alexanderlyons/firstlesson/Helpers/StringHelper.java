@@ -1,4 +1,4 @@
-package net.alexanderlyons.firstlesson;
+package net.alexanderlyons.firstlesson.Helpers;
 
 /**
  * Created by PyroticBlaziken on 10/22/2015.

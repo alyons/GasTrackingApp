@@ -1,13 +1,15 @@
-package net.alexanderlyons.firstlesson;
+package net.alexanderlyons.firstlesson.DataObjects;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import net.alexanderlyons.firstlesson.DataObjects.Trip;
+import net.alexanderlyons.firstlesson.R;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;

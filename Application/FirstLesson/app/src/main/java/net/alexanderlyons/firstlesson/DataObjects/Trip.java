@@ -1,4 +1,4 @@
-package net.alexanderlyons.firstlesson;
+package net.alexanderlyons.firstlesson.DataObjects;
 
 import android.content.Context;
 

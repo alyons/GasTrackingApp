@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.alexanderlyons.firstlesson.DataObjects.Trip;
+import net.alexanderlyons.firstlesson.Helpers.StringHelper;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +30,6 @@ import io.realm.Realm;
  * create an instance of this fragment.
  */
 public class AddTripFragment extends Fragment {
-    private final static String ADDED_TRIP = "net.alexanderlyons.firstlesson.ADDED_TRIP";
     private final static String DATE_PARAM = "net.alexanderlyons.firstlesson.ADD_DATE";
     private final static String DISTANCE_PARAM = "net.alexanderlyons.firstlesson.ADD_DISTANCE";
     private final static String AMOUNT_PARAM = "net.alexanderlyons.firstlesson.ADD_AMOUNT";
