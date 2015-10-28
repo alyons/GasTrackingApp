@@ -70,7 +70,7 @@ public class CarTripsOverview extends Fragment {
         realm = Realm.getDefaultInstance();
         RealmQuery<Car> carQuery = realm.where(Car.class);
         RealmResults<Car> carResults = carQuery.findAll();
-        carAdapter = new CarArrayAdapter(getActivity(), carResults.toArray(new Car[carResults.size()]));
+        carAdapter = new CarArrayAdapter(getActivity(),0, carResults, true);
 
         RealmQuery<Trip> tripQuery = realm.where(Trip.class);
         RealmResults<Trip> tripResults = tripQuery.findAll();
@@ -79,17 +79,17 @@ public class CarTripsOverview extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_car_trips_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_car_trips_overview, container, true);
 
         // Bind all of the views with Butter Knife
         ButterKnife.bind(this, view);
 
-        setUpSwipeMenu();
+        // setUpSwipeMenu();
 
         // Add my event listeners
         tripListView.setAdapter(tripAdapter);
 
-        carSpinner.setAdapter(carAdapter);
+        // carSpinner.setAdapter(carAdapter);
 
         return view;
     }

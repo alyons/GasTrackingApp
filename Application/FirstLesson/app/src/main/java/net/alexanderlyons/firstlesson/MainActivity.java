@@ -44,14 +44,17 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         setContentView(R.layout.activity_main);
 
         realm = Realm.getDefaultInstance();
-        RealmQuery<Car> query = realm.where(Car.class);
+        /* RealmQuery<Car> query = realm.where(Car.class);
         RealmResults<Car> results = query.findAll();
         Car[] cars = results.toArray(new Car[results.size()]);
-        carArrayAdapter = new CarArrayAdapter(getApplicationContext(), cars);
+        carArrayAdapter = new CarArrayAdapter(getApplicationContext(), 0, results, true); */
 
         if (savedInstanceState == null) {
             tripsFragment = new CarTripsOverview();
-            getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripsFragment).commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content_container, tripsFragment)
+                    .commit();
         }
     }
 

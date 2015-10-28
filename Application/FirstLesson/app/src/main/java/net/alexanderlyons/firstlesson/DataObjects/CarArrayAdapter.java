@@ -6,29 +6,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import net.alexanderlyons.firstlesson.Helpers.StringHelper;
 import net.alexanderlyons.firstlesson.R;
 
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
+
 /**
  * Created by PyroticBlaziken on 10/25/2015.
  */
-public class CarArrayAdapter extends ArrayAdapter<Car> {
-    private final Context context;
-    private final Car[] values;
+public class CarArrayAdapter extends RealmBaseAdapter<Car> implements SpinnerAdapter {
 
-    public CarArrayAdapter(Context context, Car[] values) {
-        super(context, -1, values);
-        this.context = context;
-        this.values = values;
+    private static class MyViewHolder {
+        LinearLayout carAdapter;
+    }
+
+    public CarArrayAdapter(Context context, int resID, RealmResults<Car> realmResults, boolean automaticUpdates) {
+        super(context, realmResults, automaticUpdates);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.car_adapter, parent, false);
-        Car item = values[position];
+        Car item = realmResults.get(position);
         Resources res = Resources.getSystem();
 
         TextView nicknameText = (TextView)rowView.findViewById(R.id.nickname_text);
