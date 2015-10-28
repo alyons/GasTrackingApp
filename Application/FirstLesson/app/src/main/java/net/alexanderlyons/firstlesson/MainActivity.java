@@ -24,7 +24,7 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements TripFragment.OnFragmentInteractionListener, AddTripFragment.OnAddTripFinishListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener {
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AddCarFragment.OnAddCarFinishListener {
 
     public static final String ADD_TRIP_FRAGMENT_NAME = AddTripFragment.class.toString();
 
@@ -36,17 +36,12 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
 
     Realm realm;
 
-    Spinner carSpinner;
     CarArrayAdapter carArrayAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //this.carSpinner = (Spinner)findViewById(R.id.main_car_spinner);
-        //this.carSpinner.setOnItemSelectedListener(this);
 
         realm = Realm.getDefaultInstance();
         RealmQuery<Car> query = realm.where(Car.class);
@@ -55,10 +50,6 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         carArrayAdapter = new CarArrayAdapter(getApplicationContext(), cars);
 
         if (savedInstanceState == null) {
-            //tripFragment = new TripFragment();
-            //getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripFragment).commit();
-            //carFragment = new CarFragment();
-            //getSupportFragmentManager().beginTransaction().add(R.id.content_container, carFragment).commit();
             tripsFragment = new CarTripsOverview();
             getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripsFragment).commit();
         }
@@ -79,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         int id = item.getItemId();
 
         if (id == R.id.action_car_list) {
-            switchToCarFragment();
+            switchToAddCarFragment();
             return true;
         }
 
@@ -141,22 +132,17 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
     }
 
     // Add Car Interactions
-    public void cancelAddCar(View view) {
+    @Override
+    public void onAddCarFinish() {
+        switchToCarTripsFragment();
+    }
 
+    public void cancelAddCar(View view) {
+        addCarFragment.onCancelPressed();
     }
 
     public void confirmAddCar(View view) {
-
-    }
-
-    // Spinner Methods
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        // An item was selected so we are going to do a thing here.
-        Toast.makeText(getApplicationContext(), String.format("You selected the car at position %d!", pos), Toast.LENGTH_SHORT).show();
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {
-        Toast.makeText(getApplicationContext(), "You didn't select a car...", Toast.LENGTH_SHORT).show();
+        addCarFragment.onConfirmPressed();
     }
 
     // Fragment Switch Interactions

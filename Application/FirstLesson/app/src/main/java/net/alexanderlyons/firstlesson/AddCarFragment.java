@@ -12,6 +12,8 @@ import android.widget.Toast;
 import net.alexanderlyons.firstlesson.DataObjects.Car;
 import net.alexanderlyons.firstlesson.Helpers.StringHelper;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 
 
@@ -30,6 +32,7 @@ public class AddCarFragment extends Fragment {
     private final static String YEAR_PARAM = "net.alexanderlyons.firstlesson.ADD_YEAR";
     private final static String CITY_MPG_PARAM = "net.alexanderlyons.firstlesson.ADD_CITY_MPG";
     private final static String HIGHWAY_MPG_PARAM = "net.alexanderlyons.firstlesson.ADD_HIGHWAY_MPG";
+    private final static String BASE_MILEAGE_PARAM = "net.alexanderlyons.firstlesson.ADD_BASE_MILEAGE";
 
     private String nickname;
     private String make;
@@ -37,19 +40,21 @@ public class AddCarFragment extends Fragment {
     private int year;
     private double cityMPG;
     private double highwayMPG;
+    private double baseMileage;
 
     private OnAddCarFinishListener mListener;
 
-    private EditText nicknameEditText;
-    private EditText makeEditText;
-    private EditText modelEditText;
-    private EditText yearEditText;
-    private EditText cityMPGEditText;
-    private EditText highwayMPGEditText;
+    @Bind(R.id.nickname_edit_text) EditText nicknameEditText;
+    @Bind(R.id.make_edit_text) EditText makeEditText;
+    @Bind(R.id.model_edit_text) EditText modelEditText;
+    @Bind(R.id.year_edit_text) EditText yearEditText;
+    @Bind(R.id.cityMPG_edit_text) EditText cityMPGEditText;
+    @Bind(R.id.highwayMPG_edit_text) EditText highwayMPGEditText;
+    @Bind(R.id.base_mileage_edit_text) EditText baseMileageEditText;
 
     private Realm realm;
 
-    public static AddCarFragment newInstance(String nickname, String make, String model, int year, double cityMPG, double highwayMPG) {
+    public static AddCarFragment newInstance(String nickname, String make, String model, int year, double cityMPG, double highwayMPG, double baseMileage) {
         AddCarFragment fragment = new AddCarFragment();
         Bundle args = new Bundle();
         args.putString(NICKNAME_PARAM, nickname);
@@ -58,6 +63,7 @@ public class AddCarFragment extends Fragment {
         args.putInt(YEAR_PARAM, year);
         args.putDouble(CITY_MPG_PARAM, cityMPG);
         args.putDouble(HIGHWAY_MPG_PARAM, highwayMPG);
+        args.putDouble(BASE_MILEAGE_PARAM, baseMileage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,9 +82,10 @@ public class AddCarFragment extends Fragment {
             this.year = getArguments().getInt(YEAR_PARAM);
             this.cityMPG = getArguments().getDouble(CITY_MPG_PARAM);
             this.highwayMPG = getArguments().getDouble(HIGHWAY_MPG_PARAM);
+            this.baseMileage = getArguments().getDouble(BASE_MILEAGE_PARAM);
         }
 
-        realm = Realm.getInstance(getContext());
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -86,12 +93,7 @@ public class AddCarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_car, container, false);
 
-        this.nicknameEditText = (EditText)view.findViewById(R.id.nickname_edit_text);
-        this.makeEditText = (EditText)view.findViewById(R.id.make_edit_text);
-        this.modelEditText = (EditText)view.findViewById(R.id.model_edit_text);
-        this.yearEditText = (EditText)view.findViewById(R.id.year_edit_text);
-        this.cityMPGEditText = (EditText)view.findViewById(R.id.cityMPG_edit_text);
-        this.highwayMPGEditText = (EditText)view.findViewById(R.id.highwayMPG_edit_text);
+        ButterKnife.bind(this, view);
 
         return view;
     }
@@ -102,51 +104,61 @@ public class AddCarFragment extends Fragment {
 
         make = makeEditText.getText().toString();
         if (StringHelper.isNullOrWhitespace(make)) {
-            Toast.makeText(getContext(), "You must supply a make.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must supply a make.", Toast.LENGTH_LONG).show();
             return;
         }
 
         model = modelEditText.getText().toString();
         if (StringHelper.isNullOrWhitespace(model)) {
-            Toast.makeText(getContext(), "You must supply a model.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must supply a model.", Toast.LENGTH_LONG).show();
             return;
         }
 
         String yearString = yearEditText.getText().toString();
         if (StringHelper.isNullOrWhitespace(yearString)) {
-            Toast.makeText(getContext(), "You must supply a year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must supply a year.", Toast.LENGTH_LONG).show();
             return;
         } else {
             try {
                 year = Integer.parseInt(yearString);
             } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Year must be an integer.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Year must be an integer.", Toast.LENGTH_LONG).show();
                 return;
             }
         }
 
         String cityMPGString = cityMPGEditText.getText().toString();
         if (StringHelper.isNullOrWhitespace(cityMPGString)) {
-            Toast.makeText(getContext(), "You must supply a city MPG.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must supply a city MPG.", Toast.LENGTH_LONG).show();
             return;
         } else {
             try {
                 cityMPG = Double.parseDouble(cityMPGString);
             } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "City MPG must be a number.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "City MPG must be a number.", Toast.LENGTH_LONG).show();
                 return;
             }
         }
 
         String highwayMPGString = highwayMPGEditText.getText().toString();
         if (StringHelper.isNullOrWhitespace(highwayMPGString)) {
-            Toast.makeText(getContext(), "You must supply a highway MPG.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must supply a highway MPG.", Toast.LENGTH_LONG).show();
             return;
         } else {
             try {
                 highwayMPG = Double.parseDouble(highwayMPGString);
             } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Highway MPG must be a number.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Highway MPG must be a number.", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        String baseMileageString = baseMileageEditText.getText().toString();
+        if (!StringHelper.isNullOrWhitespace(baseMileageString)) {
+            try {
+                baseMileage = Double.parseDouble(baseMileageString);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Base Mileage must be a number.", Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -157,6 +169,8 @@ public class AddCarFragment extends Fragment {
         } else {
             car = new Car(nickname, make, model, year, cityMPG, highwayMPG);
         }
+
+        car.setBaseMileage(baseMileage);
 
         realm.beginTransaction();
         realm.copyToRealm(car);

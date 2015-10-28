@@ -3,8 +3,6 @@
     android:layout_height="match_parent" tools:context="net.alexanderlyons.firstlesson.AddCar"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <EditText
         android:id="@+id/nickname_edit_text"
         android:layout_width="match_parent"
@@ -53,6 +51,14 @@
         android:ems="10"
         android:hint="Highway MPG (37.0)"/>
 
+    <EditText
+        android:id="@+id/base_mileage_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:hint="Base Mileage (0 miles)"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -64,13 +70,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Cancel"
-             />
+            android:onClick="cancelAddCar" />
 
         <Button
             android:id="@+id/add_car_confirm_button"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Confirm" />
+            android:text="Confirm"
+            android:onClick="confirmAddCar" />
     </LinearLayout>
 </LinearLayout>

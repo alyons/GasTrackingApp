@@ -46,4 +46,5 @@ public class CarArrayAdapter extends ArrayAdapter<Car> {
 
         return rowView;
     }
+
 }
