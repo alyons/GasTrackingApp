@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.support.v4.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,10 +26,13 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements TripFragment.OnFragmentInteractionListener, AddTripFragment.OnAddTripFinishListener,
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener {
 
+    public static final String ADD_TRIP_FRAGMENT_NAME = AddTripFragment.class.toString();
+
     TripFragment tripFragment;
     AddTripFragment addTripFragment;
     CarFragment carFragment;
     AddCarFragment addCarFragment;
+    CarTripsOverview tripsFragment;
 
     Realm realm;
 
@@ -55,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
             //getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripFragment).commit();
             //carFragment = new CarFragment();
             //getSupportFragmentManager().beginTransaction().add(R.id.content_container, carFragment).commit();
+            tripsFragment = new CarTripsOverview();
+            getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripsFragment).commit();
         }
     }
 
@@ -73,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         int id = item.getItemId();
 
         if (id == R.id.action_car_list) {
-            Toast.makeText(getApplicationContext(), String.format("Opening Car List..."), Toast.LENGTH_SHORT).show();
             switchToCarFragment();
             return true;
         }
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
 
     // Add Trip Interactions
     public void onAddTripFinish() {
-        switchToTripFragment();
+        switchToCarTripsFragment();
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -172,16 +177,21 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
     void switchToAddCarFragment() {
         addCarFragment = new AddCarFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_container, addCarFragment,"add_car")
-                .addToBackStack("add_car")
+                .replace(R.id.content_container, addCarFragment)
                 .commit();
     }
 
     void switchToCarFragment() {
         carFragment = new CarFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_container, carFragment, "car_list")
-                .addToBackStack("car_list")
+                .replace(R.id.content_container, carFragment)
+                .commit();
+    }
+
+    void switchToCarTripsFragment() {
+        tripsFragment = new CarTripsOverview();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_container, tripsFragment)
                 .commit();
     }
 }
