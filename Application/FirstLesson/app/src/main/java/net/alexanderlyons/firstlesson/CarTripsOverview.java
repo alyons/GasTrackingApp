@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -26,7 +24,6 @@ import net.alexanderlyons.firstlesson.Helpers.MathHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmBaseAdapter;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -84,12 +81,12 @@ public class CarTripsOverview extends Fragment {
         // Bind all of the views with Butter Knife
         ButterKnife.bind(this, view);
 
-        // setUpSwipeMenu();
+        setUpSwipeMenu();
 
         // Add my event listeners
         tripListView.setAdapter(tripAdapter);
 
-        // carSpinner.setAdapter(carAdapter);
+        carSpinner.setAdapter(carAdapter);
 
         return view;
     }

@@ -50,12 +50,11 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         carArrayAdapter = new CarArrayAdapter(getApplicationContext(), 0, results, true); */
 
         if (savedInstanceState == null) {
-            tripsFragment = new CarTripsOverview();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.content_container, tripsFragment)
-                    .commit();
+
         }
+
+        tripsFragment = new CarTripsOverview();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripsFragment).commit();
     }
 
     @Override

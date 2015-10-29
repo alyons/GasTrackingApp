@@ -26,6 +26,8 @@ import net.alexanderlyons.firstlesson.Helpers.MathHelper;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -45,16 +47,8 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
-    private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    private TripAdapterRealm mAdapter;
+    @Bind(android.R.id.list) AbsListView mListView;
+    TripAdapterRealm mAdapter;
 
     private Realm realm;
 
@@ -88,19 +82,6 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
         results.sort("date", RealmResults.SORT_ORDER_DESCENDING);
         mAdapter = new TripAdapterRealm(getActivity(), 0, results, true);
 
-        // SwipeMenuItemCreator
-        SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(new ColorDrawable(Color.RED));
-                deleteItem.setWidth(MathHelper.dipToPixels(getContext(), 90));
-                deleteItem.setTitle("Delete");
-                deleteItem.setTitleColor(Color.WHITE);
-                deleteItem.setTitleSize(18);
-                menu.addMenuItem(deleteItem);
-            }
-        };
     }
 
     @Override
@@ -108,8 +89,8 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trip, container, false);
 
-        // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        ButterKnife.bind(this, view);
+
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
