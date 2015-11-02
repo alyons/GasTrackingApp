@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -19,7 +20,11 @@ import net.alexanderlyons.firstlesson.DataObjects.Car;
 import net.alexanderlyons.firstlesson.DataObjects.CarArrayAdapter;
 import net.alexanderlyons.firstlesson.DataObjects.Trip;
 import net.alexanderlyons.firstlesson.DataObjects.TripAdapterRealm;
+import net.alexanderlyons.firstlesson.DataObjects.TripArrayAdapter;
 import net.alexanderlyons.firstlesson.Helpers.MathHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,12 +37,15 @@ import io.realm.RealmResults;
  * Use the {@link CarTripsOverview#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CarTripsOverview extends Fragment {
+public class CarTripsOverview extends Fragment implements AdapterView.OnItemSelectedListener {
+
+    List<Trip> tripList;
 
     @Bind(R.id.car_list_spinner) Spinner carSpinner;
     @Bind(R.id.car_overview_trip_list) SwipeMenuListView tripListView;
 
     CarArrayAdapter carAdapter;
+    TripArrayAdapter tripArrayAdapter;
     TripAdapterRealm tripAdapter;
     Realm realm;
 
@@ -76,17 +84,21 @@ public class CarTripsOverview extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_car_trips_overview, container, true);
+        View view = inflater.inflate(R.layout.fragment_car_trips_overview, container, false);
 
         // Bind all of the views with Butter Knife
         ButterKnife.bind(this, view);
 
         setUpSwipeMenu();
 
+        tripList = new ArrayList<Trip>();
+        tripArrayAdapter = new TripArrayAdapter(getActivity(), tripList);
+
         // Add my event listeners
-        tripListView.setAdapter(tripAdapter);
+        tripListView.setAdapter(tripArrayAdapter);
 
         carSpinner.setAdapter(carAdapter);
+        carSpinner.setOnItemSelectedListener(this);
 
         return view;
     }
@@ -120,6 +132,22 @@ public class CarTripsOverview extends Fragment {
                 return false;
             }
         });
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getAdapter().getClass() == CarArrayAdapter.class) {
+            CarArrayAdapter carAdapter = (CarArrayAdapter)parent.getAdapter();
+            Car car = carAdapter.getItem(position);
+            tripArrayAdapter.clear();
+            tripArrayAdapter.addAll(car.getTrips());
+        }
+
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (parent.getAdapter().getClass() == CarArrayAdapter.class) {
+            tripArrayAdapter.clear();
+        }
     }
 
     private void delete(Trip trip) {

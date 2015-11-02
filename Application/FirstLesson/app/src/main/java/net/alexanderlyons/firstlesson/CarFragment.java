@@ -1,6 +1,8 @@
 package net.alexanderlyons.firstlesson;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,37 +13,29 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+
 import net.alexanderlyons.firstlesson.DataObjects.Car;
 import net.alexanderlyons.firstlesson.DataObjects.CarListAdapter;
+import net.alexanderlyons.firstlesson.Helpers.MathHelper;
 import net.alexanderlyons.firstlesson.dummy.DummyContent;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnCarSelectedListener}
- * interface.
- */
 public class CarFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     private OnCarSelectedListener mListener;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
-    private AbsListView mListView;
+    @Bind(R.id.car_list) SwipeMenuListView carListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    private ListAdapter mAdapter;
+    CarListAdapter carListAdapter;
 
     private Realm realm;
 
@@ -70,7 +64,7 @@ public class CarFragment extends Fragment implements AbsListView.OnItemClickList
         realm = Realm.getDefaultInstance();
         RealmQuery<Car> query = realm.where(Car.class);
         RealmResults<Car> results = query.findAll();
-        mAdapter = new CarListAdapter(getActivity(), 0, results, true);
+        carListAdapter = new CarListAdapter(getActivity(), 0, results, true);
     }
 
     @Override
@@ -78,14 +72,50 @@ public class CarFragment extends Fragment implements AbsListView.OnItemClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car, container, false);
 
-        // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        ButterKnife.bind(this, view);
 
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
+        setUpSwipeMenu();
+
+        carListView.setAdapter(carListAdapter);
 
         return view;
+    }
+
+    void setUpSwipeMenu() {
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
+                deleteItem.setBackground(new ColorDrawable(Color.RED));
+                deleteItem.setWidth(MathHelper.dipToPixels(getContext(), 90));
+                deleteItem.setTitle("Delete");
+                deleteItem.setTitleColor(Color.WHITE);
+                deleteItem.setTitleSize(18);
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        carListView.setMenuCreator(creator);
+
+        carListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                Car car = carListAdapter.getItem(position);
+                switch (index) {
+                    case 0:
+                        delete(car);
+                        carListAdapter.notifyDataSetChanged();
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void delete(Car car) {
+        realm.beginTransaction();
+        car.removeFromRealm();
+        realm.commitTransaction();
     }
 
     @Override
@@ -121,7 +151,7 @@ public class CarFragment extends Fragment implements AbsListView.OnItemClickList
      * to supply the text it should use.
      */
     public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
+        View emptyView = carListView.getEmptyView();
 
         if (emptyView instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);

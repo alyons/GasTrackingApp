@@ -32,22 +32,18 @@ public class CarArrayAdapter extends RealmBaseAdapter<Car> implements SpinnerAda
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.car_adapter, parent, false);
+        View rowView = inflater.inflate(R.layout.car_adapter_small, parent, false);
         Car item = realmResults.get(position);
         Resources res = Resources.getSystem();
 
-        TextView nicknameText = (TextView)rowView.findViewById(R.id.nickname_text);
-        String usableNickname = (StringHelper.isNullOrWhitespace(item.getNickname())) ? item.getNickname() : item.getModel();
+        TextView nicknameText = (TextView)rowView.findViewById(R.id.nickname_text_small);
+        String usableNickname = (StringHelper.isNullOrWhitespace(item.getNickname())) ? item.getModel() : item.getNickname();
         nicknameText.setText(usableNickname);
 
-        TextView dataText = (TextView)rowView.findViewById(R.id.data_text);
-        dataText.setText(res.getString(R.string.car_data_format, item.getMake(), item.getModel(), item.getYear()));
+        TextView dataText = (TextView)rowView.findViewById(R.id.data_text_small);
+        //dataText.setText(res.getString(R.string.car_data_format, item.getMake(), item.getModel(), item.getYear()));
+        dataText.setText(String.format("%1$s %2$s %3$d", item.getMake(), item.getModel(), item.getYear()));
 
-        TextView cityText = (TextView)rowView.findViewById(R.id.cityMPG_text);
-        cityText.setText(res.getString(R.string.city_mpg_display_format, item.getCityMPG()));
-
-        TextView highwayText = (TextView)rowView.findViewById((R.id.highwayMPG_text));
-        highwayText.setText(res.getString(R.string.highway_mpg_display_format, item.getHighwayMPG()));
 
         return rowView;
     }

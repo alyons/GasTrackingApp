@@ -33,20 +33,19 @@ public class CarListAdapter extends RealmBaseAdapter<Car> implements ListAdapter
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.car_adapter, parent, false);
         Car item = realmResults.get(position);
-        Resources res = Resources.getSystem();
 
         TextView nicknameText = (TextView)rowView.findViewById(R.id.nickname_text);
         String usableNickname = (StringHelper.isNullOrWhitespace(item.getNickname())) ? item.getNickname() : item.getModel();
         nicknameText.setText(usableNickname);
 
         TextView dataText = (TextView)rowView.findViewById(R.id.data_text);
-        dataText.setText(res.getString(R.string.car_data_format, item.getMake(), item.getModel(), item.getYear()));
+        dataText.setText(context.getString(R.string.car_data_format, item.getMake(), item.getModel(), item.getYear()));
 
         TextView cityText = (TextView)rowView.findViewById(R.id.cityMPG_text);
-        cityText.setText(res.getString(R.string.city_mpg_display_format, item.getCityMPG()));
+        cityText.setText(context.getString(R.string.city_mpg_display_format, item.getCityMPG()));
 
         TextView highwayText = (TextView)rowView.findViewById((R.id.highwayMPG_text));
-        highwayText.setText(res.getString(R.string.highway_mpg_display_format, item.getHighwayMPG()));
+        highwayText.setText(context.getString(R.string.highway_mpg_display_format, item.getHighwayMPG()));
 
         return rowView;
     }

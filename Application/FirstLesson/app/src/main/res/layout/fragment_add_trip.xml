@@ -4,7 +4,10 @@
     tools:context="net.alexanderlyons.firstlesson.AddTripFragment"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <Spinner
+        android:id="@+id/add_trip_car_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:orientation="horizontal"

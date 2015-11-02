@@ -7,10 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.alexanderlyons.firstlesson.DataObjects.Car;
+import net.alexanderlyons.firstlesson.DataObjects.CarArrayAdapter;
 import net.alexanderlyons.firstlesson.DataObjects.Trip;
 import net.alexanderlyons.firstlesson.Helpers.StringHelper;
 
@@ -18,7 +22,11 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 
 /**
@@ -42,14 +50,16 @@ public class AddTripFragment extends Fragment {
 
     private OnAddTripFinishListener mListener;
 
-    private TextView dateText;
-    private EditText distanceText;
-    private EditText amountText;
-    private EditText priceText;
+    @Bind(R.id.add_trip_car_spinner) Spinner carSpinner;
+    @Bind(R.id.add_date_text) TextView dateText;
+    @Bind(R.id.add_distance_text) EditText distanceText;
+    @Bind(R.id.add_amount_text) EditText amountText;
+    @Bind(R.id.add_price_text) EditText priceText;
 
     private Date usageDate;
     private DateFormat dateFormat;
     private Realm realm;
+    CarArrayAdapter carAdapter;
 
     public static AddTripFragment newInstance(Long date, Double distance, Double amount, Double price) {
         AddTripFragment fragment = new AddTripFragment();
@@ -80,6 +90,10 @@ public class AddTripFragment extends Fragment {
         dateFormat = DateFormat.getDateTimeInstance();
         //if (this.date != 0) usageDate = new Date(date);
         realm = Realm.getDefaultInstance();
+
+        RealmQuery<Car> carQuery = realm.where(Car.class);
+        RealmResults<Car> carResults = carQuery.findAll();
+        carAdapter = new CarArrayAdapter(getActivity(),0, carResults, true);
     }
 
     @Override
@@ -87,10 +101,9 @@ public class AddTripFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_trip, container, false);
 
-        dateText = (TextView)view.findViewById(R.id.add_date_text);
-        distanceText = (EditText)view.findViewById(R.id.add_distance_text);
-        amountText = (EditText)view.findViewById(R.id.add_amount_text);
-        priceText = (EditText)view.findViewById(R.id.add_price_text);
+        ButterKnife.bind(this, view);
+
+        carSpinner.setAdapter(carAdapter);
 
         return view;
     }
@@ -144,9 +157,17 @@ public class AddTripFragment extends Fragment {
             }
         }
 
+        int selectedCarPosition = carSpinner.getSelectedItemPosition();
+        if (selectedCarPosition == AdapterView.INVALID_POSITION) {
+            Toast.makeText(getContext(), "Please select a vehicle to add the trip to.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Car selectedCar = carAdapter.getItem(selectedCarPosition);
         Trip trip = new Trip(usageDate, distance, price, amount);
         realm.beginTransaction();
         realm.copyToRealm(trip);
+        selectedCar.getTrips().add(trip);
         realm.commitTransaction();
 
         if (mListener != null) {

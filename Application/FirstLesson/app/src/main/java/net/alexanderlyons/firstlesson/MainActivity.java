@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AddCarFragment.OnAddCarFinishListener {
 
     public static final String ADD_TRIP_FRAGMENT_NAME = AddTripFragment.class.toString();
+    public static final String CAR_LIST_FRAGMENT_NAME = CarFragment.class.toString();
 
     TripFragment tripFragment;
     AddTripFragment addTripFragment;
@@ -44,17 +45,15 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         setContentView(R.layout.activity_main);
 
         realm = Realm.getDefaultInstance();
-        /* RealmQuery<Car> query = realm.where(Car.class);
+        RealmQuery<Car> query = realm.where(Car.class);
         RealmResults<Car> results = query.findAll();
-        Car[] cars = results.toArray(new Car[results.size()]);
-        carArrayAdapter = new CarArrayAdapter(getApplicationContext(), 0, results, true); */
+        carArrayAdapter = new CarArrayAdapter(getApplicationContext(), 0, results, true);
 
         if (savedInstanceState == null) {
 
         }
 
-        tripsFragment = new CarTripsOverview();
-        getSupportFragmentManager().beginTransaction().add(R.id.content_container, tripsFragment).commit();
+        switchToCarTripsFragment();
     }
 
     @Override
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         int id = item.getItemId();
 
         if (id == R.id.action_car_list) {
-            switchToAddCarFragment();
+            switchToCarFragment();
             return true;
         }
 
@@ -128,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    // Car List Interactions
-    public void onCarSelected(int id) {
-
+    // Car Overview Interactions
+    public void addCar(View view) {
+        switchToAddCarFragment();
     }
 
     // Add Car Interactions
@@ -172,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
     void switchToCarFragment() {
         carFragment = new CarFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, carFragment)
+                .add(R.id.content_container, carFragment, CAR_LIST_FRAGMENT_NAME)
+                .addToBackStack(CAR_LIST_FRAGMENT_NAME)
                 .commit();
     }
 
