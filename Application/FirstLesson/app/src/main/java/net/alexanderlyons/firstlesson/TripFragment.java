@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * A fragment representing a list of Items.
@@ -79,7 +80,7 @@ public class TripFragment extends Fragment implements AbsListView.OnItemClickLis
         realm = Realm.getDefaultInstance();
         RealmQuery<Trip> query = realm.where(Trip.class);
         RealmResults<Trip> results = query.findAll();
-        results.sort("date", RealmResults.SORT_ORDER_DESCENDING);
+        results.sort("date", Sort.DESCENDING);
         mAdapter = new TripAdapterRealm(getActivity(), 0, results, true);
 
     }
