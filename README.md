@@ -9,8 +9,8 @@ The app is currently unable to run. I am getting an error related to setting a c
 
 ## Progress
  - [X] Add Trips to the app
- - [ ] Add Cars to the app
- - [ ] Track your gas mileage on a vehicle
+ - [X] Add Cars to the app
+ - [X] Track your gas mileage on a vehicle
  - [ ] Track mileages for different vehicles
  - [ ] Track mileages across multiple devices
  - [ ] Compare your mileage against the cars rating
@@ -25,4 +25,6 @@ I have wanted to track my gas and see how well I am driving... or more correctly
 
 [Butter Knife](http://jakewharton.github.io/butterknife/) - This makes binding views to a class so much easier.
 
-[Swipe Menu List View](https://github.com/baoyongzhang/SwipeMenuListView) - This makes it easy to implement swipe to delete.
+[Realm RecyclerView](https://github.com/thorbenprimke/realm-recyclerview) - This makes it super easy to use realm with list style displays.
+
+~~[Swipe Menu List View](https://github.com/baoyongzhang/SwipeMenuListView) - This makes it easy to implement swipe to delete.~~
