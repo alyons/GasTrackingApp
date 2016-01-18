@@ -1,18 +1,19 @@
 package net.alexanderlyons.firstlesson;
 
 import android.app.DatePickerDialog;
-import android.support.v4.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.preference.PreferenceFragment;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -28,12 +29,14 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
 
     public static final String ADD_TRIP_FRAGMENT_NAME = AddTripFragment.class.toString();
     public static final String CAR_LIST_FRAGMENT_NAME = CarFragment.class.toString();
+    public static final String SETTINGS_FRAGMENT_NAME = SettingsFragment.class.toString();
 
     TripFragment tripFragment;
     AddTripFragment addTripFragment;
     CarFragment carFragment;
     AddCarFragment addCarFragment;
     CarTripsOverview tripsFragment;
+    SettingsFragment settingsFragment;
 
     Realm realm;
 
@@ -77,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(getApplicationContext(), String.format("Opening Settings..."), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), String.format("Opening Settings..."), Toast.LENGTH_SHORT).show();
+            switchToSettingsFragment();
             return true;
         }
 
@@ -181,5 +185,27 @@ public class MainActivity extends AppCompatActivity implements TripFragment.OnFr
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_container, tripsFragment)
                 .commit();
+    }
+
+    void switchToSettingsFragment() {
+        settingsFragment = new SettingsFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.content_container, settingsFragment, SETTINGS_FRAGMENT_NAME)
+                .addToBackStack(SETTINGS_FRAGMENT_NAME)
+                .commit();
+    }
+
+    public static class SettingsFragment extends PreferenceFragmentCompat {
+
+        public void onCreatePreferences(Bundle savedInstance, String key) {
+            // Do nothing here...?
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstance) {
+            super.onCreate(savedInstance);
+
+            addPreferencesFromResource(R.xml.preferences);
+        }
     }
 }

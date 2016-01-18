@@ -29,27 +29,26 @@ public class TripAdapterRealm extends RealmBaseAdapter<Trip> implements ListAdap
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.trip_adapter, parent, false);
         Trip item = realmResults.get(position);
 
-        TextView dateText = (TextView)rowView.findViewById(R.id.date_text);
+        TextView dateText = (TextView) rowView.findViewById(R.id.date_text);
         String dateFormat = this.context.getResources().getString(R.string.date_display);
         dateText.setText(String.format(dateFormat, item.getDate()));
 
-        TextView distanceText = (TextView)rowView.findViewById(R.id.distance_text);
+        TextView distanceText = (TextView) rowView.findViewById(R.id.distance_text);
         String distanceFormat = this.context.getResources().getString(R.string.distance_display);
         distanceText.setText(String.format(distanceFormat, item.getDistance()));
 
-        TextView amountText = (TextView)rowView.findViewById(R.id.amount_text);
+        TextView amountText = (TextView) rowView.findViewById(R.id.amount_text);
         String amountFormat = this.context.getResources().getString(R.string.amount_display);
         amountText.setText(String.format(amountFormat, item.getFuelPurchased()));
 
-        TextView priceText = (TextView)rowView.findViewById(R.id.price_text);
+        TextView priceText = (TextView) rowView.findViewById(R.id.price_text);
         String priceFormat = this.context.getResources().getString(R.string.price_display);
         priceText.setText(String.format(priceFormat, item.getFuelCost()));
 
         return rowView;
     }
-
 }

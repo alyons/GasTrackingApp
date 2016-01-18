@@ -1,26 +1,30 @@
 package net.alexanderlyons.firstlesson;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
+
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import net.alexanderlyons.firstlesson.DataObjects.Car;
 import net.alexanderlyons.firstlesson.DataObjects.CarArrayAdapter;
 import net.alexanderlyons.firstlesson.DataObjects.Trip;
-import net.alexanderlyons.firstlesson.DataObjects.TripAdapterRealm;
 import net.alexanderlyons.firstlesson.DataObjects.TripArrayAdapter;
+import net.alexanderlyons.firstlesson.DataObjects.TripRecyclerAdapter;
 import net.alexanderlyons.firstlesson.Helpers.MathHelper;
 
 import java.util.ArrayList;
@@ -42,12 +46,14 @@ public class CarTripsOverview extends Fragment implements AdapterView.OnItemSele
     List<Trip> tripList;
 
     @Bind(R.id.car_list_spinner) Spinner carSpinner;
-    @Bind(R.id.car_overview_trip_list) SwipeMenuListView tripListView;
+    @Bind(R.id.realm_recycler_trip_list) RealmRecyclerView tripRecyclerView;
 
     CarArrayAdapter carAdapter;
     TripArrayAdapter tripArrayAdapter;
-    TripAdapterRealm tripAdapter;
+    TripRecyclerAdapter tripRecyclerAdapter;
     Realm realm;
+
+    Car car;
 
     public static CarTripsOverview newInstance() {
         CarTripsOverview fragment = new CarTripsOverview();
@@ -77,9 +83,13 @@ public class CarTripsOverview extends Fragment implements AdapterView.OnItemSele
         RealmResults<Car> carResults = carQuery.findAll();
         carAdapter = new CarArrayAdapter(getActivity(),0, carResults, true);
 
+        if (carAdapter.getCount() > 0) {
+            car = carAdapter.getItem(0);
+        }
+
         RealmQuery<Trip> tripQuery = realm.where(Trip.class);
         RealmResults<Trip> tripResults = tripQuery.findAll();
-        tripAdapter = new TripAdapterRealm(getActivity(), 0, tripResults, true);
+        tripRecyclerAdapter = new TripRecyclerAdapter(getActivity(), tripResults);
     }
 
     @Override
@@ -89,13 +99,18 @@ public class CarTripsOverview extends Fragment implements AdapterView.OnItemSele
         // Bind all of the views with Butter Knife
         ButterKnife.bind(this, view);
 
-        setUpSwipeMenu();
 
         tripList = new ArrayList<Trip>();
         tripArrayAdapter = new TripArrayAdapter(getActivity(), tripList);
 
         // Add my event listeners
-        tripListView.setAdapter(tripArrayAdapter);
+        tripRecyclerView.setAdapter(tripRecyclerAdapter);
+        tripRecyclerView.setOnRefreshListener(new RealmRecyclerView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                asyncRefreshTrips(carSpinner.getSelectedItemPosition());
+            }
+        });
 
         carSpinner.setAdapter(carAdapter);
         carSpinner.setOnItemSelectedListener(this);
@@ -103,41 +118,11 @@ public class CarTripsOverview extends Fragment implements AdapterView.OnItemSele
         return view;
     }
 
-    void setUpSwipeMenu() {
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(new ColorDrawable(Color.RED));
-                deleteItem.setWidth(MathHelper.dipToPixels(getContext(), 90));
-                deleteItem.setTitle("Delete");
-                deleteItem.setTitleColor(Color.WHITE);
-                deleteItem.setTitleSize(18);
-                menu.addMenuItem(deleteItem);
-            }
-        };
-
-        tripListView.setMenuCreator(creator);
-
-        tripListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                Trip trip = tripAdapter.getItem(position);
-                switch (index) {
-                    case 0:
-                        delete(trip);
-                        tripAdapter.notifyDataSetChanged();
-                        break;
-                }
-                return false;
-            }
-        });
-    }
-
+    // Methods for Car Spinner
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getAdapter().getClass() == CarArrayAdapter.class) {
             CarArrayAdapter carAdapter = (CarArrayAdapter)parent.getAdapter();
-            Car car = carAdapter.getItem(position);
+            car = carAdapter.getItem(position);
             tripArrayAdapter.clear();
             tripArrayAdapter.addAll(car.getTrips());
         }
@@ -150,14 +135,38 @@ public class CarTripsOverview extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void delete(Trip trip) {
-        realm.beginTransaction();
-        trip.removeFromRealm();
-        realm.commitTransaction();
+    // Methods for Trip Listing
+    public void onItemClick(View childView, int position) {
+
     }
 
-    public interface OnCarTripsOverviewInteractionListener {
-        public void onItemSelected(int position);
-    }
+    // Methods for dealing with Realm Updates
+    private void asyncRefreshTrips(final int carPosition) {
+        AsyncTask<Void, Void, Void> remotemItem = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // Do nothing...
+                }
 
+                Realm instance = Realm.getDefaultInstance();
+                RealmResults<Car> carRealmResults = instance.where(Car.class).findAll();
+                tripArrayAdapter.clear();
+                tripArrayAdapter.addAll(carRealmResults.get(carPosition).getTrips());
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                tripRecyclerView.setRefreshing(false);
+            }
+
+        };
+
+        remotemItem.execute();
+    }
 }

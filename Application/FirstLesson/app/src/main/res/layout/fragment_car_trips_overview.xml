@@ -31,11 +31,21 @@
 
         </LinearLayout>
 
-        <com.baoyz.swipemenulistview.SwipeMenuListView
+        <!-- <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/car_overview_trip_list"
             android:layout_weight="1"
             android:layout_width="fill_parent"
-            android:layout_height="0dp" />
+            android:layout_height="0dp" /> -->
+
+        <co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView
+            android:id="@+id/realm_recycler_trip_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:rrvIsRefreshable="true"
+            app:rrvEmptyLayoutId="@layout/empty_view"
+            app:rrvLayoutType="LinearLayout"
+            app:rrvSwipeToDelete="true"
+            />
 
     </LinearLayout>
 

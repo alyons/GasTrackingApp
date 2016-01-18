@@ -2,7 +2,10 @@ package net.alexanderlyons.firstlesson;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,6 +167,20 @@ public class AddTripFragment extends Fragment {
         }
 
         Car selectedCar = carAdapter.getItem(selectedCarPosition);
+
+        // Check if we are using the odometer style preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean useOdometer = preferences.getBoolean(getResources().getString(R.string.use_odometer_key), true);
+
+        if (useOdometer) {
+            double odometer = selectedCar.getBaseMileage();
+            for (Trip trip : selectedCar.getTrips()) {
+                if (trip.getDate().before(usageDate)) odometer += trip.getDistance();
+            }
+
+            distance -= odometer;
+        }
+
         Trip trip = new Trip(usageDate, distance, price, amount);
         realm.beginTransaction();
         realm.copyToRealm(trip);

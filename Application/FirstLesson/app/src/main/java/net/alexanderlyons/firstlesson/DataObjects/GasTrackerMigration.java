@@ -1,8 +1,9 @@
 package net.alexanderlyons.firstlesson.DataObjects;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmMigration;
-import io.realm.internal.ColumnType;
+import io.realm.RealmSchema;
 import io.realm.internal.Table;
 
 /**
@@ -10,29 +11,15 @@ import io.realm.internal.Table;
  */
 public class GasTrackerMigration implements RealmMigration {
 
-    public long execute(Realm realm, long schemaVersion) {
-        schemaVersion = version0ToVersion1(realm, schemaVersion);
+    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
-        return schemaVersion;
-    }
+        RealmSchema schema = realm.getSchema();
 
-    long version0ToVersion1(Realm realm, long schemaVersion) {
-
-        /*
-            // Version 0
-            class Car
-                add RealmList<Trip> trips;
-                add double baseMileage;
-         */
-
-        if (schemaVersion == 0) {
-            Table carTable = realm.getTable(Car.class);
-            carTable.addColumn(ColumnType.LINK_LIST, "trips");
-            carTable.addColumn(ColumnType.DOUBLE, "baseMileage");
-
-            schemaVersion++;
+        if (oldVersion == 0) {
+            schema.get("Car")
+                    .addRealmListField("trips", schema.get("Trip"))
+                    .addField("baseMileage", double.class);
         }
 
-        return schemaVersion;
     }
 }
