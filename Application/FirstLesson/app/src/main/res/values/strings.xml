@@ -10,10 +10,17 @@
     <string name="price_display">"Price: %.2f"</string>
     <string name="amount_display">"Gallons: %.3f"</string>
     <string name="date_placeholder">Date</string>
+    <string name="odometer_placeholder">Odometer (Mi.)</string>
     <string name="distance_placeholder">Distance (Mi.)</string>
     <string name="amount_placeholder">Amount (Gal.)</string>
     <string name="price_placeholder">Price ($)</string>
     <string name="car_data_format">"%1$s %2$s %3$d"</string>
     <string name="city_mpg_display_format">"City: %.1f mpg"</string>
     <string name="highway_mpg_display_format">"Highway: %.1f mpg"</string>
+    <!-- Settings Strings -->
+    <string name="track_pref_title">Tracking</string>
+    <string name="use_odometer_key">net.alexanderlyons.firstlesson.use_odometer</string>
+    <string name="use_odometer_setting">Use Odometer for Input</string>
+    <string name="use_odometer_summary">Use your odometer instead of inputing the exact mileage of each trip.</string>
+
 </resources>

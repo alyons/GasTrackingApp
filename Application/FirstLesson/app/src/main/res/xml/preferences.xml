@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/track_pref_title"
+        android:key="net.alexanderlyons.firstlesson.tracking_preferences">
+        <CheckBoxPreference
+            android:key="@string/use_odometer_key"
+            android:title="@string/use_odometer_setting"
+            android:summary="@string/use_odometer_summary"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+</PreferenceScreen>
